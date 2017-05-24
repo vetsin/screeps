@@ -10,6 +10,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "sourceMap": true,
+    "allowJs": true,
     "baseUrl": "./src/"
   },
   "compileOnSave": false,

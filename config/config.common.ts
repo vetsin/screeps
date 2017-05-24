@@ -102,6 +102,8 @@ export function init(options: EnvOptions): Config {
   config.plugin("screeps-source-map")
     .use(ScreepsSourceMapToJson);
 
+  //config.plugin("b3")
+  //  .use(b3);
   /////////
   /// Modules
 

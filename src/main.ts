@@ -1,8 +1,11 @@
-import * as CreepManager from "./components/creeps/creepManager";
+//import * as CreepManager from "./components/creeps/creepManager";
 import * as Config from "./config/config";
 
 import * as Profiler from "screeps-profiler";
 import { log } from "./lib/logger/log";
+
+import Q from "./Queen";
+global.Queen = new Q;
 
 // Any code written outside the `loop()` method is executed only when the
 // Screeps system reloads your script.
@@ -25,32 +28,20 @@ function mloop() {
   if (!Memory.uuid || Memory.uuid > 100) {
     Memory.uuid = 0;
   }
-
-  for (const i in Game.rooms) {
-    const room: Room = Game.rooms[i];
-
-    CreepManager.run(room);
-
-    // Clears any non-existing creep memory.
-    for (const name in Memory.creeps) {
-      const creep: any = Memory.creeps[name];
-
-      if (creep.room === room.name) {
-        if (!Game.creeps[name]) {
-          log.info("Clearing non-existing creep memory:", name);
-          delete Memory.creeps[name];
-        }
-      }
+  // Clear memory
+  for (let name in Memory.creeps) {
+    if (Game.creeps[name] == undefined) {
+      // then delete
+      delete Memory.creeps[name];
     }
+
+  }
+
+  global.Queen.initialize();
+
+  for(let name in global.Queen.Hives) {
+    global.Queen.Hiveminds[name].run();
   }
 }
 
-/**
- * Screeps system expects this "loop" method in main.js to run the
- * application. If we have this line, we can be sure that the globals are
- * bootstrapped properly and the game loop is executed.
- * http://support.screeps.com/hc/en-us/articles/204825672-New-main-loop-architecture
- *
- * @export
- */
 export const loop = !Config.USE_PROFILER ? mloop : Profiler.wrap(mloop);

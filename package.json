@@ -1,7 +1,7 @@
 {
-  "name": "screeps-starter",
+  "name": "screeps",
   "version": "2.0.0",
-  "description": "",
+  "description": "vetsin",
   "main": "./dist/main.js",
   "repository": "screepers/screeps-typescript-starter",
   "scripts": {

@@ -5,6 +5,8 @@
 declare namespace NodeJS {
   interface Global {
     log: any;
+    //b3: any;
+    Queen: any;
   }
 }
 

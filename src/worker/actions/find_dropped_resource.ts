@@ -9,8 +9,8 @@ export class FindDroppedResource extends BaseNode {
   /*
   * Get Stored
   */
-  constructor() {
-    super('FindDroppedResource');
+  constructor(id?: number) {
+    super('FindDroppedResource', id);
   }
 
   public tick(tick: Tick) : number {
@@ -19,7 +19,7 @@ export class FindDroppedResource extends BaseNode {
     // Stay on target...
     if(creep.memory.target) {
       let obj = Game.getObjectById(creep.memory.target);
-      if(obj instanceof Resource) {
+      if(obj && obj instanceof Resource && (obj as Resource).amount > 0) {
         return b3.State.SUCCESS;
       }
     }

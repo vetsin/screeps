@@ -4,11 +4,12 @@ import b3 from './../../lib/b3/';
 
 export class CheckTargetEnergy extends BaseNode {
 
-  constructor() {
-    super('CheckEnergy');
+  constructor(id?: number) {
+    super('CheckEnergy', id);
   }
 
   public tick(tick: Tick) : number {
+    console.log('CheckEnergy.tick')
     var creep = <Creep>tick.target;
     if(creep.memory.target) {
       let target = Game.getObjectById<Structure>(creep.memory.target);

@@ -5,8 +5,8 @@ import {RoomState} from './../../components/state';
 
 export class PickupTarget extends BaseNode {
 
-  constructor() {
-    super('PickupTarget');
+  constructor(id?: number) {
+    super('PickupTarget', id);
   }
 
   public tick(tick: Tick) : number {

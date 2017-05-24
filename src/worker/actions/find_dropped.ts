@@ -3,7 +3,7 @@ import Tick from './../../lib/b3/tick';
 import b3 from './../../lib/b3/';
 import {RoomState} from './../../components/state';
 
-export class FindStoredEnergy extends BaseNode {
+export class FindDroppedResource extends BaseNode {
   name: string;
 
   /*
@@ -14,15 +14,11 @@ export class FindStoredEnergy extends BaseNode {
   }
 
   public tick(tick: Tick) : number {
+    //console.log('GetEnergy.tick')
     var creep = <Creep>tick.target;
     // Stay on target...
-    if(creep.memory.target) {
-      let tgt = Game.getObjectById(creep.memory.target);
-      if(tgt instanceof Structure) {
-        if (tgt.structureType == STRUCTURE_CONTAINER)
-          return b3.State.SUCCESS;
-      }
-    }
+    if(creep.memory.target)
+      return b3.State.SUCCESS;
     if(creep.carry.energy == undefined)
       return b3.State.FAILURE;
 
@@ -32,9 +28,8 @@ export class FindStoredEnergy extends BaseNode {
       let actual_capacity = creep.carryCapacity - creep.carry.energy;
       let container = creep.pos.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
         filter: (s : Structure) =>{
-          if (s.structureType == STRUCTURE_CONTAINER ) {
+          if (s != undefined && s.structureType == STRUCTURE_CONTAINER ) {
             let sc = s as StructureContainer;
-            console.log(sc.store[RESOURCE_ENERGY], ' ', state.get_earmarked_energy(s.id), ' ', sc.store[RESOURCE_ENERGY])
             return sc.store[RESOURCE_ENERGY] > 0 &&
                     state.get_earmarked_energy(s.id) < sc.store[RESOURCE_ENERGY];
           }

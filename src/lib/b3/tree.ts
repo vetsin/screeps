@@ -5,6 +5,7 @@
 import {createUUID} from './utils';
 import BaseNode from './basenode';
 import Blackboard from './blackboard';
+import NodeGetter from './node_getter';
 import Tick from './tick';
 
 /**
@@ -45,44 +46,6 @@ export default class BehavoirTree {
   }
 
   /**
-   * Load from JSON
-   */
-  public load(data: any, names: any) : void {
-    names = names || {};
-    this.title = data.title || this.title;
-    this.description = data.description || this.description;
-    this.properties = data.properties || this.properties;
-
-    let nodes = {};
-
-    for(let id in data.nodes) {
-      let spec = data.nodes[id];
-      var clazz;
-
-        if (spec.name in names) {
-          // Look for the name in custom nodes
-          clazz = names[spec.name];
-        //} else if (spec.name in b3) {
-        //  // Look for the name in default nodes
-        //  clazz = b3[spec.name];
-        } else {
-          // Invalid node name
-          throw new EvalError('BehaviorTree.load: Invalid node name + "'+
-                               spec.name+'".');
-        }
-/*
-        node = new Cls(spec.properties);
-        node.id = spec.id || node.id;
-        node.title = spec.title || node.title;
-        node.description = spec.description || node.description;
-        node.properties = spec.properties || node.properties;
-
-        nodes[id] = node;*/
-    }
-
-  }
-
-  /**
    * Apply the behavior tree to an entity with a context blackboard.
    *
    * @method  tick
@@ -112,8 +75,9 @@ export default class BehavoirTree {
 
     // close the nodes that are still opened
     for (var i = lastOpenNodes.length - 1; i >= start; i --) {
-      //lastOpenNodes[i]._close(tick);
-      //TODO: figure this out - these are just {}'s in memory
+      let node = this.find_node(lastOpenNodes[i].name);
+      if(node)
+        node._close(tick);
     }
 
     /* POPULATE BLACKBOARD */
@@ -121,5 +85,22 @@ export default class BehavoirTree {
     blackboard.set('nodeCount', tick.nodeCount, this.id);
 
     return state;
+  }
+
+
+  private find_node(id: string, node? : BaseNode) : BaseNode | undefined {
+    // walk tree :(
+    var mynode = node || this.root;
+    if(mynode.name == id)
+      return mynode;
+    if((mynode as any).childs != undefined) {
+      let chillen = (mynode as any).childs as BaseNode[]
+      for(let mn of chillen) {
+        let res = this.find_node(id, mn);
+        if(res)
+          return res;
+      }
+    }
+    return undefined;
   }
 }

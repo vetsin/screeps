@@ -39,10 +39,10 @@ export class Upgrader extends Worker {
     setup() : any {
       return new b3.composite.Priority([
         new b3.composite.MemSequence([
-          new Actions.FindTarget(STRUCTURE_CONTROLLER),
-          new Actions.MoveToTarget(),
-          new Actions.TransferTarget()
-        ])
-      ])
+          new Actions.FindTarget(STRUCTURE_CONTROLLER, 1),
+          new Actions.MoveToTarget(1),
+          new Actions.TransferTarget(1)
+        ],1)
+      ],0)
     }
 }

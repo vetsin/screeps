@@ -7,8 +7,8 @@ const profiler = require('screeps-profiler');
 export class HarvestSource extends BaseNode {
   name: string;
 
-  constructor() {
-    super('HarvestSource');
+  constructor(id?: number) {
+    super('HarvestSource', id);
   }
 
   public tick(tick: Tick) : number {

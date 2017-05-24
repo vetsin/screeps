@@ -44,32 +44,32 @@ export class Conductor extends Worker {
         // get energy
         new b3.composite.MemPriority([
           new b3.composite.MemSequence([
-            new Actions.FindStoredEnergy(),
-            new Actions.WithdrawTarget(),
-          ]),
+            new Actions.FindStoredEnergy(1),
+            new Actions.WithdrawTarget(RESOURCE_ENERGY, 1),
+          ], 3),
           new b3.composite.MemSequence([
-            new Actions.FindDroppedResource(),
-            new Actions.PickupTarget()
-          ]),
-        ]),
+            new Actions.FindDroppedResource(1),
+            new Actions.PickupTarget(1)
+          ], 4),
+        ], 1),
         // put it somewhere
         new b3.composite.MemPriority([
           // prioritize spawn, we want creeps first.
           new b3.composite.MemSequence([
-            new Actions.FindTarget(STRUCTURE_SPAWN),
-            new Conditions.CheckTargetEnergy(),
-            new Actions.TransferTarget()
-          ]),
+            new Actions.FindTarget(STRUCTURE_SPAWN, 1),
+            new Conditions.CheckTargetEnergy(1),
+            new Actions.TransferTarget(1)
+          ], 5),
           new b3.composite.MemSequence([
-            new Actions.FindRole('builder'),
-            new Actions.TransferTarget()
-          ]),
+            new Actions.FindRole('builder', 1),
+            new Actions.TransferTarget(2)
+          ], 6),
           new b3.composite.MemSequence([
-            new Actions.FindRole('upgrader'),
-            new Actions.TransferTarget()
-          ])
-        ])
-      ])
+            new Actions.FindRole('upgrader', 2),
+            new Actions.TransferTarget(3)
+          ], 7)
+        ], 2)
+      ], 0)
     }
 }
 profiler.registerClass(Conductor, 'Conductor');

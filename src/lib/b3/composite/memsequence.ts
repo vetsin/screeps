@@ -3,11 +3,11 @@ import State from './../constants/state';
 import BaseNode from './../basenode';
 import Tick from './../tick';
 
-export default class MemSequence extends BaseNode {
+export default class MemSequence extends BaseNode implements IComposite {
   childs: BaseNode[];
 
-  constructor(childs: BaseNode[]) {
-    super('MemSequence');
+  constructor(childs: BaseNode[], id?: number) {
+    super('MemSequence', id);
 
     this.childs = [];
     childs.map(c => this.childs.push(c));
@@ -16,7 +16,7 @@ export default class MemSequence extends BaseNode {
   public open(tick: Tick) : void {
     tick.blackboard.set('runningChild', 0, tick.tree.id, this.generate_id());
   }
-  
+
   public tick(tick : Tick) : number {
     var child = tick.blackboard.get('runningChild', tick.tree.id, this.generate_id());
 

@@ -3,11 +3,11 @@ import State from './../constants/state';
 import BaseNode from './../basenode';
 import Tick from './../tick';
 
-export default class Sequence extends BaseNode {
+export default class Sequence extends BaseNode implements IComposite {
   childs: BaseNode[];
 
-  constructor(childs : BaseNode[]) {
-    super('Sequence');
+  constructor(childs : BaseNode[], id?: number) {
+    super('Sequence', id);
 
     this.childs = [];
     childs.map(c => this.childs.push(c));

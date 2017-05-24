@@ -38,18 +38,18 @@ export class Builder extends Worker {
   setup() : any {
     return new b3.composite.MemPriority([
       new b3.composite.MemSequence([
-        new Actions.FindConstructionSite(STRUCTURE_CONTAINER),
-        new Actions.BuildTarget()
-      ]),
+        new Actions.FindConstructionSite(STRUCTURE_CONTAINER, 1),
+        new Actions.BuildTarget(1)
+      ], 1),
       new b3.composite.MemSequence([
-        new Actions.FindConstructionSite(STRUCTURE_EXTENSION),
-        new Actions.BuildTarget()
-      ]),
+        new Actions.FindConstructionSite(STRUCTURE_EXTENSION, 2),
+        new Actions.BuildTarget(2)
+      ], 2),
       new b3.composite.MemSequence([
-        new Actions.FindTarget(STRUCTURE_CONTROLLER),
-        new Actions.MoveToTarget(),
-        new Actions.TransferTarget()
-      ])/*,
+        new Actions.FindTarget(STRUCTURE_CONTROLLER, 1),
+        new Actions.MoveToTarget(1),
+        new Actions.TransferTarget(1)
+      ], 3)/*,
       new b3.composite.MemSequence([
         new Actions.FindConstructionSite(STRUCTURE_SPAWN),
         new Actions.BuildTarget()
@@ -59,6 +59,6 @@ export class Builder extends Worker {
         new Actions.FindTarget(STRUCTURE_CONTROLLER),
         new Actions.TransferTarget()
       ])*/
-    ])
+    ], 0);
   }
 }

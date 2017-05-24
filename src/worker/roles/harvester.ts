@@ -52,32 +52,32 @@ export class Harvester extends Worker {
     public setup() : any {
       return new b3.composite.Priority([
         new b3.composite.MemSequence([
-          new Actions.FindSource(),
-          new Actions.HarvestSource(),
+          new Actions.FindSource(1),
+          new Actions.HarvestSource(1),
           new b3.composite.MemPriority([
             // either deposit it
             new b3.composite.MemSequence([
-              new Actions.FindTarget(STRUCTURE_CONTAINER),
-              new Actions.RepairTarget(),
-              new Actions.TransferTarget()
-            ]),
+              new Actions.FindTarget(STRUCTURE_CONTAINER, 1),
+              new Actions.RepairTarget(1),
+              new Actions.TransferTarget(1)
+            ], 3),
             new b3.composite.MemPriority([
               // transfer it
               new b3.composite.MemSequence([
                 new Conditions.WorkerEquals('conductor', 0),
-                new Actions.FindTarget(STRUCTURE_SPAWN),
-                new Conditions.CheckTargetEnergy(),
-                new Actions.TransferTarget()
-              ]),
+                new Actions.FindTarget(STRUCTURE_SPAWN, 2),
+                new Conditions.CheckTargetEnergy(1),
+                new Actions.TransferTarget(2)
+              ], 5),
               // or drop it
               new b3.composite.Sequence([
-                new Actions.DropResource()
-              ])
-            ])
-          ])
+                new Actions.DropResource(RESOURCE_ENERGY, 1)
+              ], 6)
+            ], 4)
+          ], 2)
 
-        ])
-      ])
+        ], 1)
+      ], 0)
     }
 }
 profiler.registerClass(Harvester, 'Harvester');

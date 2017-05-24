@@ -7,8 +7,8 @@ export class FindRole extends BaseNode {
   name: string;
   role: string
 
-  constructor(role: string) {
-    super('FindRole');
+  constructor(role: string, id?: number) {
+    super('FindRole', id);
     this.role = role
   }
 

@@ -8,8 +8,8 @@ const profiler = require('screeps-profiler');
 export class TransferTarget extends BaseNode {
   name: string;
 
-  constructor() {
-    super('TransferTarget');
+  constructor(id?: number) {
+    super('TransferTarget', id);
   }
 
   public tick(tick: Tick) : number {
@@ -33,13 +33,13 @@ export class TransferTarget extends BaseNode {
         creep.moveTo(target);
       } else if(transfer_result == ERR_FULL) {
         global.log.debug('Target FULL')
-        state.unmark_energy(creep.memory.target, creep.carryCapacity - creep.carry[RESOURCE_ENERGY]); // dangerous assumption
+        state.unmark_energy(creep.memory.target, creep.carryCapacity - creep.carry.energy); // dangerous assumption
         delete creep.memory.target;
         return b3.State.SUCCESS;
       }
       return b3.State.RUNNING
     }
-    state.unmark_energy(creep.memory.target, creep.carryCapacity - creep.carry[RESOURCE_ENERGY]); // dangerous assumption
+    state.unmark_energy(creep.memory.target, creep.carryCapacity - creep.carry.energy); // dangerous assumption
     delete creep.memory.target;
     return b3.State.SUCCESS;
   }

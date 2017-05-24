@@ -5,8 +5,8 @@ import b3 from './../../lib/b3/';
 
 export class UpgradeTarget extends BaseNode {
 
-  constructor() {
-    super('UpgradeTarget');
+  constructor(id?: number) {
+    super('UpgradeTarget', id);
   }
 
   public tick(tick: Tick) : number {

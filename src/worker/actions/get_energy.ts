@@ -6,8 +6,8 @@ import {RoomState} from './../../components/state';
 export class GetEnergy extends BaseNode {
   name: string;
 
-  constructor() {
-    super('GetEnergy');
+  constructor(id?: number) {
+    super('GetEnergy', id);
   }
 
   public tick(tick: Tick) : number {
@@ -20,7 +20,7 @@ export class GetEnergy extends BaseNode {
       return b3.State.FAILURE;
 
     let state = new RoomState(creep.room);
-    
+
     if(creep.carry.energy < creep.carryCapacity) {
       //console.log('look for dropped...')
       // first find loose energy

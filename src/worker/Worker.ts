@@ -13,10 +13,12 @@ export abstract class Worker {
   tree: any;
   blackboard: any;
   tree_id: string;
+  currentUUID: number;
 
   constructor(creepName: string, role: string) {
     this.name = creepName;
     this.role = role;
+    this.currentUUID = 0;
 
     if(creepName != '') {
       //console.log('gonna create a new tree..')
@@ -25,6 +27,10 @@ export abstract class Worker {
       this.tree = new b3.BehaviorTree(this.tree_id, this.setup());
       this.blackboard = new b3.Blackboard();
     }
+  }
+
+  protected createUUID() : number {
+    return this.currentUUID++;
   }
 
   abstract setup() : any;
@@ -40,7 +46,7 @@ export abstract class Worker {
   }
 
   protected grow_parts(parts: string[], energy: number) {
-    
+
   }
 
   public tick(): void {

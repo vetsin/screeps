@@ -6,8 +6,8 @@ export class WorkerEquals extends BaseNode {
   role: string;
   count: number;
 
-  constructor(role: string, count: number) {
-    super('WorkerEquals');
+  constructor(role: string, count: number, id?: number) {
+    super('WorkerEquals', id);
     this.role = role;
     this.count = count;
   }

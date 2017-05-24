@@ -8,7 +8,7 @@ export class BuildExtension extends BaseNode {
   name: string;
 
   constructor(id?: number) {
-    super('BuildExtension'+id);
+    super('BuildExtension', id);
   }
 
   public tick(tick: Tick) : number {

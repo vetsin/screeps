@@ -5,8 +5,8 @@ import b3 from './../../lib/b3/';
 export class DepositEnergy extends BaseNode {
   name: string;
 
-  constructor() {
-    super('Deposit');
+  constructor(id?: number) {
+    super('Deposit', id);
   }
 
   public tick(tick: Tick) : number {

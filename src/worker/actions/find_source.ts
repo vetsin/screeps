@@ -7,8 +7,8 @@ const profiler = require('screeps-profiler');
 export class FindSource extends BaseNode {
   name: string;
 
-  constructor() {
-    super('FindSource');
+  constructor(id?: number) {
+    super('FindSource', id);
   }
 
   private remember_source(creep: Creep, source_id: string, data: SourceData) : any {
@@ -41,7 +41,7 @@ export class FindSource extends BaseNode {
    */
   private sources_with_lairs(creep: Creep) : string[] {
     let keeper_lairs = creep.room.find<StructureKeeperLair>(FIND_STRUCTURES, { filter:
-      (s: Structure) => { return s.structureType ==  STRUCTURE_KEEPER_LAIR}
+      (s: Structure) => { return s != undefined && s.structureType ==  STRUCTURE_KEEPER_LAIR}
     });
     let sources_with_lairs = [];
     if(keeper_lairs.length > 0) {

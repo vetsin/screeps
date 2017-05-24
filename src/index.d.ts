@@ -5,6 +5,11 @@ interface Memory {
   log: any;
 }
 */
+
+interface IComposite {
+  childs: any[];
+}
+
 interface Step {
   x: number;
   y: number;
@@ -27,7 +32,7 @@ interface SourceData {
 }
 
 interface ConductorState {
-  
+
 }
 
 interface protoCreep {

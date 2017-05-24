@@ -1,20 +1,24 @@
 
 import {createUUID} from './utils';
 import State from './constants/state';
+import NodeGetter from './node_getter';
 import Tick from './tick';
 
 export default abstract class BaseNode {
   //id: string;
   name: string;
-  description: string;
-  parameters: {};
-  properties: {};
+  //description: string;
+  //parameters: {};
+  //properties: {};
 
-  constructor(name: string) {
+  constructor(name: string, id?: number) {
     this.name = name;
-    this.description = '';
-    this.parameters = {};
-    this.properties = {};
+    if(id)
+      this.name = this.name + id;
+    //NodeGetter.set(this.name, this);
+    //this.description = '';
+    //this.parameters = {};
+    //this.properties = {};
   }
 
   protected generate_id() : string {
@@ -44,29 +48,35 @@ export default abstract class BaseNode {
     return status;
   }
 
-  private _enter(tick: Tick) : void {
+  public _enter(tick: Tick) : void {
     tick.enterNode(this);
     this.enter(tick);
   }
-  
-  private _open(tick: Tick) : void {
+
+  public _open(tick: Tick) : void {
     tick.openNode(this);
     tick.blackboard.set('isOpen', true, tick.tree.id, this.generate_id());
     this.open(tick);
   }
 
-  private _tick(tick: Tick) : number {
+  public _tick(tick: Tick) : number {
     tick.tickNode(this);
-    return this.tick(tick);
+    try {
+      return this.tick(tick);
+    } catch (e) {
+      global.log.error(e);
+      return State.ERROR;
+    }
+
   }
 
-  private _close(tick: Tick) : void {
+  public _close(tick: Tick) : void {
     tick.closeNode(this);
     tick.blackboard.set('isOpen', false, tick.tree.id, this.generate_id());
     this.close(tick);
   }
 
-  private _exit(tick: Tick) {
+  public _exit(tick: Tick) {
     tick.exitNode(this);
     this.exit(tick);
   }

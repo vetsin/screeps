@@ -9,8 +9,8 @@ export class CheckTargetEnergy extends BaseNode {
   }
 
   public tick(tick: Tick) : number {
-    console.log('CheckEnergy.tick')
     var creep = <Creep>tick.target;
+    console.log(creep.name, 'check energy', creep.memory.target)
     if(creep.memory.target) {
       let target = Game.getObjectById<Structure>(creep.memory.target);
       if(target) {

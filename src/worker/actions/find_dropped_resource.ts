@@ -42,6 +42,6 @@ export class FindDroppedResource extends BaseNode {
       // we failed...
       return b3.State.FAILURE;
     }
-    return b3.State.SUCCESS;
+    return b3.State.FAILURE;
   }
 }

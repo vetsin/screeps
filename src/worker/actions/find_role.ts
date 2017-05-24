@@ -19,7 +19,7 @@ export class FindRole extends BaseNode {
     let target = creep.pos.findClosestByRange<Creep>(FIND_MY_CREEPS, {
       filter: (c: Creep) => { return c.memory.role == this.role && _.sum(c.carry) < c.carryCapacity }
     });
-    //console.log('findrole ', target)
+    console.log('findrole ', this.role, target)
     if(!target)
       return b3.State.FAILURE;
     creep.memory.target = target.id;

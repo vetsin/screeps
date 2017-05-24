@@ -43,6 +43,7 @@ export class Conductor extends Worker {
       return new b3.composite.MemSequence([
         // get energy
         new b3.composite.MemPriority([
+          new Conditions.AlreadyFull(1),
           new b3.composite.MemSequence([
             new Actions.FindStoredEnergy(1),
             new Actions.WithdrawTarget(RESOURCE_ENERGY, 1),

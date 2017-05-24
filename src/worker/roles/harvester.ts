@@ -43,7 +43,6 @@ export class Harvester extends Worker {
           //if(active_count < source_mem.harvester_count) {
 
           if(active_count < 1 && source_mem.has_keeper == false) {
-            console.log('source ', source, ' active count ', active_count, ' keeper ', source_mem.has_keeper);
             return this.get_proto(300); // HACK
           }
         }

@@ -1,3 +1,5 @@
-# Screeps
+# Vetsin's Screeps
 
-`npm start`
+Public because it's just a game.
+
+Uses behavior trees.

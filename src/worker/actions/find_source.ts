@@ -22,7 +22,6 @@ export class FindSource extends BaseNode {
       if (!source)
         return {};
 
-      console.log('gonna remember source haskeeper ', data.has_keeper)
       creep.room.memory.sources[source_id] = {
         x: data.x,
         y: data.y,
@@ -71,7 +70,6 @@ export class FindSource extends BaseNode {
                 source.pos.x - 1, source.pos.y + 1, source.pos.x + 1, true),
                 (pos:LookAtResultWithPos) => { return pos.type == 'terrain' }
               );
-    console.log('area_arr ', area_arr);
     // count the number of spaces we can mine from
     var max_spots = 0;
     for(let point of area_arr) {

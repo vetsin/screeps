@@ -52,7 +52,7 @@ export class Hivemind {
       let spawn = this.hive.hatchery.getBestSpawn();
       let pc = this.decide_spawn(spawn)
       if(pc && spawn.energy >= 300) {
-        global.log.debug('Spawning: ', pc.name);
+        global.log.info('Spawning New Creep : ', pc.name);
         this.hive.hatchery.spawnCreep(pc);
       }
     }

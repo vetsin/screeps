@@ -64,8 +64,9 @@ export class Harvester extends Worker {
             new b3.composite.MemPriority([
               // transfer it
               new b3.composite.MemSequence([
-                new Conditions.WorkerMin('conductor', 1),
+                new Conditions.WorkerEquals('conductor', 0),
                 new Actions.FindTarget(STRUCTURE_SPAWN),
+                new Conditions.CheckTargetEnergy(),
                 new Actions.TransferTarget()
               ]),
               // or drop it

@@ -1,6 +1,7 @@
 import BaseNode from './../../lib/b3/basenode';
 import Tick from './../../lib/b3/tick';
 import b3 from './../../lib/b3/';
+import {RoomState} from './../../components/state';
 
 export class GetEnergy extends BaseNode {
   name: string;
@@ -15,6 +16,11 @@ export class GetEnergy extends BaseNode {
     // Stay On target
     if(creep.memory.target)
       return b3.State.SUCCESS;
+    if(creep.carry.energy == undefined)
+      return b3.State.FAILURE;
+
+    let state = new RoomState(creep.room);
+    
     if(creep.carry.energy < creep.carryCapacity) {
       //console.log('look for dropped...')
       // first find loose energy
@@ -37,6 +43,8 @@ export class GetEnergy extends BaseNode {
         }
         return b3.State.RUNNING
       }
+      // we failed...
+      return b3.State.FAILURE;
     }
 
     return b3.State.SUCCESS;

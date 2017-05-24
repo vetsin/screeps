@@ -26,6 +26,10 @@ interface SourceData {
   harvester_count: number;
 }
 
+interface ConductorState {
+  
+}
+
 interface protoCreep {
     body: string[];
     name: any;

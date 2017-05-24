@@ -31,7 +31,7 @@ export class Upgrader extends Worker {
         return this.get_proto(300);
       } else {
         // for now just have 1 upgraders, allow builders to fill the role otherwise
-        if(upgraders.length < 1)
+        if(upgraders.length < 2)
           return this.get_proto(300);
       }
     }

@@ -30,17 +30,25 @@ export class Builder extends Worker {
     if(upgraders.length == 0) {
       return this.get_proto(300);
     } else {
-      // for now at least 2 builders
-      if(upgraders.length < 2)
+      if(upgraders.length < 3)
         return this.get_proto(300);
     }
   }
 
   setup() : any {
-    return new b3.composite.Priority([
+    return new b3.composite.MemPriority([
       new b3.composite.MemSequence([
         new Actions.FindConstructionSite(STRUCTURE_CONTAINER),
         new Actions.BuildTarget()
+      ]),
+      new b3.composite.MemSequence([
+        new Actions.FindConstructionSite(STRUCTURE_EXTENSION),
+        new Actions.BuildTarget()
+      ]),
+      new b3.composite.MemSequence([
+        new Actions.FindTarget(STRUCTURE_CONTROLLER),
+        new Actions.MoveToTarget(),
+        new Actions.TransferTarget()
       ])/*,
       new b3.composite.MemSequence([
         new Actions.FindConstructionSite(STRUCTURE_SPAWN),

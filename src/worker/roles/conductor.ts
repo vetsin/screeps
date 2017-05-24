@@ -40,26 +40,34 @@ export class Conductor extends Worker {
     }
 
     public setup() : any {
-      return new b3.composite.Priority([
-        new b3.composite.MemSequence([
-          new Actions.GetEnergy(),
-          new b3.composite.MemPriority([
-            // prioritize spawn, we want creeps first.
-            new b3.composite.MemSequence([
-              new Actions.FindTarget(STRUCTURE_SPAWN),
-              new Conditions.CheckTargetEnergy(),
-              new Actions.TransferTarget()
-            ]),
-            new b3.composite.MemSequence([
-              new Actions.FindRole('builder'),
-              new Actions.TransferTarget()
-            ]),
-            new b3.composite.MemSequence([
-              new Actions.FindRole('upgrader'),
-              new Actions.TransferTarget()
-            ])
+      return new b3.composite.MemSequence([
+        // get energy
+        new b3.composite.MemPriority([
+          new b3.composite.MemSequence([
+            new Actions.FindStoredEnergy(),
+            new Actions.WithdrawTarget(),
+          ]),
+          new b3.composite.MemSequence([
+            new Actions.FindDroppedResource(),
+            new Actions.PickupTarget()
+          ]),
+        ]),
+        // put it somewhere
+        new b3.composite.MemPriority([
+          // prioritize spawn, we want creeps first.
+          new b3.composite.MemSequence([
+            new Actions.FindTarget(STRUCTURE_SPAWN),
+            new Conditions.CheckTargetEnergy(),
+            new Actions.TransferTarget()
+          ]),
+          new b3.composite.MemSequence([
+            new Actions.FindRole('builder'),
+            new Actions.TransferTarget()
+          ]),
+          new b3.composite.MemSequence([
+            new Actions.FindRole('upgrader'),
+            new Actions.TransferTarget()
           ])
-
         ])
       ])
     }

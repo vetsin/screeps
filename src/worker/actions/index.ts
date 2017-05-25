@@ -4,6 +4,7 @@ export * from './deposit_energy';
 export * from './drop_resource'
 export * from './find_construction_site'
 export * from './find_dropped_resource'
+export * from './find_flag'
 export * from './find_role'
 export * from './find_source'
 export * from './find_stored_energy'

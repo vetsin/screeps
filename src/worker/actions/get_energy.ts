@@ -6,8 +6,8 @@ import {RoomState} from './../../components/state';
 export class GetEnergy extends BaseNode {
   name: string;
 
-  constructor(id?: number) {
-    super('GetEnergy', id);
+  constructor() {
+    super('GetEnergy');
   }
 
   public tick(tick: Tick) : number {

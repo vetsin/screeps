@@ -4,6 +4,7 @@ import {Hive} from './../../Hive';
 import b3 from './../../lib/b3/';
 import * as Actions from './../actions';
 import * as Conditions from './../conditions';
+import * as Utils from './../../components/utils';
 
 const profiler = require('screeps-profiler');
 
@@ -26,51 +27,63 @@ export class Conductor extends Worker {
     }
 
     public create(hive: Hive) : protoCreep | undefined {
-      let harvesters = hive.get_workers('harvester');
-      let conductors = hive.get_workers('conductor');
-      if(conductors.length == 0) {
+      let harvester_count = Utils.get_role_count(hive.room, 'harvester');
+      let conductor_count = Utils.get_role_count(hive.room, this.role);
+      if(conductor_count == 0) {
         return this.get_proto(300);
       } else {
-        if(harvesters.length == 0)
+        if(harvester_count == 0)
           return undefined;
 
-        if (conductors.length < harvesters.length * 3)
+        if (conductor_count < harvester_count * 2)
           return this.get_proto(300);
       }
     }
 
     public setup() : any {
-      return new b3.composite.MemSequence([
-        // get energy
-        new b3.composite.MemPriority([
-          new Conditions.AlreadyFull(1),
-          new b3.composite.MemSequence([
-            new Actions.FindStoredEnergy(1),
-            new Actions.WithdrawTarget(RESOURCE_ENERGY, 1),
-          ], 3),
-          new b3.composite.MemSequence([
-            new Actions.FindDroppedResource(1),
-            new Actions.PickupTarget(1)
-          ], 4),
-        ], 1),
-        // put it somewhere
-        new b3.composite.MemPriority([
-          // prioritize spawn, we want creeps first.
-          new b3.composite.MemSequence([
-            new Actions.FindTarget(STRUCTURE_SPAWN, 1),
-            new Conditions.CheckTargetEnergy(1),
-            new Actions.TransferTarget(1)
-          ], 5),
-          new b3.composite.MemSequence([
-            new Actions.FindRole('builder', 1),
-            new Actions.TransferTarget(2)
-          ], 6),
-          new b3.composite.MemSequence([
-            new Actions.FindRole('upgrader', 2),
-            new Actions.TransferTarget(3)
-          ], 7)
-        ], 2)
-      ], 0)
+      return new b3.composite.MemPriority([
+        new b3.composite.MemSequence([
+          // get energy
+          new b3.composite.MemPriority([
+            // if we're full do nothing
+            new Conditions.AlreadyFull(),
+            // else try to find stored energy
+            new b3.composite.MemSequence([
+              new Actions.FindStoredEnergy(),
+              new Actions.WithdrawTarget(RESOURCE_ENERGY),
+            ]),
+            // else find dropped energy
+            new b3.composite.MemSequence([
+              new Actions.FindDroppedResource(),
+              new Actions.PickupTarget()
+            ]),
+            // if we found no resource and have energy just do something with it.
+            new Conditions.HasEnergy()
+          ]),
+          // put it somewhere
+          new b3.composite.MemPriority([
+            // prioritize spawn, we want creeps first.
+            new b3.composite.MemSequence([
+              new Actions.FindTarget(STRUCTURE_SPAWN),
+              new Conditions.CheckTargetEnergy(),
+              new Actions.TransferTarget()
+            ]),
+            new b3.composite.MemSequence([
+              new Actions.FindRole('builder'),
+              new Actions.TransferTarget()
+            ]),
+            new b3.composite.MemSequence([
+              new Actions.FindRole('upgrader'),
+              new Actions.TransferTarget()
+            ])
+          ])
+        ]),
+        // Assume we have nothing to do, and go to spawn
+        new b3.composite.MemSequence([
+          new Actions.FindFlag('Hangout'),
+          new Actions.MoveToTarget()
+        ]),
+      ])
     }
 }
 profiler.registerClass(Conductor, 'Conductor');

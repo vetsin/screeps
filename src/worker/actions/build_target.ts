@@ -4,8 +4,8 @@ import b3 from './../../lib/b3/';
 
 export class BuildTarget extends BaseNode {
 
-  constructor(id?: number) {
-    super('BuildTarget', id);
+  constructor() {
+    super('BuildTarget');
   }
 
   public tick(tick: Tick) : number {

@@ -5,8 +5,8 @@ import b3 from './../../lib/b3/';
 export class RepairTarget extends BaseNode {
   name: string;
 
-  constructor(id?: number) {
-    super('RepairTarget', id);
+  constructor() {
+    super('RepairTarget');
   }
 
   public tick(tick: Tick) : number {

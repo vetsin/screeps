@@ -2,15 +2,15 @@ import BaseNode from './../../lib/b3/basenode';
 import Tick from './../../lib/b3/tick';
 import b3 from './../../lib/b3/';
 
-export class AlreadyFull extends BaseNode {
+export class HasEnergy extends BaseNode {
 
   constructor() {
-    super('AlreadyFull');
+    super('HasEnergy');
   }
 
   public tick(tick: Tick) : number {
     var creep = <Creep>tick.target;
-    if(_.sum(creep.carry) >= creep.carryCapacity) {
+    if(_.sum(creep.carry) >= 0) {
       return b3.State.SUCCESS
     }
     return b3.State.FAILURE;

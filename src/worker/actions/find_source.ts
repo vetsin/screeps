@@ -7,8 +7,8 @@ const profiler = require('screeps-profiler');
 export class FindSource extends BaseNode {
   name: string;
 
-  constructor(id?: number) {
-    super('FindSource', id);
+  constructor() {
+    super('FindSource');
   }
 
   private remember_source(creep: Creep, source_id: string, data: SourceData) : any {

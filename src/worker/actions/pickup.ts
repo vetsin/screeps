@@ -5,8 +5,8 @@ import {RoomState} from './../../components/state';
 
 export class PickupTarget extends BaseNode {
 
-  constructor(id?: number) {
-    super('PickupTarget', id);
+  constructor() {
+    super('PickupTarget');
   }
 
   public tick(tick: Tick) : number {
@@ -16,14 +16,19 @@ export class PickupTarget extends BaseNode {
       return b3.State.FAILURE;
 
     let state = new RoomState(creep.room);
-    if(target.amount > 0 && creep.carry.energy != undefined && creep.carry.energy < creep.carryCapacity) {
-      console.log(creep.name, 'pickup', target.id)
+    let picked_up = 0;
+    let current_capacity = creep.carryCapacity - _.sum(creep.carry);
+    if(_.sum(creep.carry) < creep.carryCapacity) {
+      //console.log(creep.name, 'pickup', target.id)
+      picked_up = target.amount;
       if(creep.pickup(target) == ERR_NOT_IN_RANGE) {
         creep.moveTo(target);
       }
-      return b3.State.RUNNING;
+      if(target.amount > 0)
+        return b3.State.RUNNING;
     }
-    state.unmark_energy(target.id, creep.carry.energy || 0);
+
+    state.unmark_energy(target.id, picked_up > current_capacity ? current_capacity : picked_up);
     delete creep.memory.target;
     return b3.State.SUCCESS;
   }

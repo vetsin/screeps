@@ -9,8 +9,8 @@ export class FindDroppedResource extends BaseNode {
   /*
   * Get Stored
   */
-  constructor(id?: number) {
-    super('FindDroppedResource', id);
+  constructor() {
+    super('FindDroppedResource');
   }
 
   public tick(tick: Tick) : number {
@@ -32,8 +32,10 @@ export class FindDroppedResource extends BaseNode {
     if(creep.carry.energy < creep.carryCapacity) {
       let actual_capacity = creep.carryCapacity - creep.carry.energy;
       var dropped = creep.pos.findClosestByRange<Resource>(FIND_DROPPED_RESOURCES)
-
-      if(dropped) {
+      if(!dropped)
+        return b3.State.FAILURE;
+      let earmarked = state.get_earmarked_energy(dropped.id);
+      if(dropped.amount > earmarked) {
         let earmark_energy_count = dropped.amount > actual_capacity ? actual_capacity : dropped.amount;
         state.earmark_energy(dropped.id, earmark_energy_count)
         creep.memory.target = dropped.id;

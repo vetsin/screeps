@@ -6,26 +6,26 @@ import Tick from './../tick';
 export default class MemPriority extends BaseNode implements IComposite {
   childs: BaseNode[];
 
-  constructor(childs : BaseNode[], id?: number) {
-    super('MemPriority', id);
+  constructor(childs : BaseNode[]) {
+    super('MemPriority');
 
     this.childs = [];
     childs.map(c => this.childs.push(c));
   }
 
   public open(tick : Tick) : void {
-    tick.blackboard.set('runningChild', 0, tick.tree.id, this.generate_id());
+    tick.blackboard.set('runningChild', 0, tick.tree.id, this.id);
   }
 
   public tick(tick : Tick) : number {
-    var child = tick.blackboard.get('runningChild', tick.tree.id, this.generate_id());
+    var child = tick.blackboard.get('runningChild', tick.tree.id, this.id);
 
     for (var i = child; i < this.childs.length; i += 1) {
       var status = this.childs[i].execute(tick);
 
       if (status !== State.FAILURE) {
         if (status === State.RUNNING) {
-          tick.blackboard.set('runningChild', i, tick.tree.id, this.generate_id());
+          tick.blackboard.set('runningChild', i, tick.tree.id, this.id);
         }
 
         return status;

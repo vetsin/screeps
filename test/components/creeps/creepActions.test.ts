@@ -1,4 +1,4 @@
-import {assert} from "chai";
+/*import {assert} from "chai";
 import {canWork} from "../../../src/components/creeps/creepActions";
 import {CreepFactory} from "../../mock/factory.creep";
 
@@ -32,3 +32,4 @@ describe("creep actions", () => {
     assert.isFalse(creep.memory.working);
   });
 });
+*/

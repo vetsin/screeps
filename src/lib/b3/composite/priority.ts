@@ -6,8 +6,8 @@ import Tick from './../tick';
 export default class Priority extends BaseNode implements IComposite {
   childs: BaseNode[];
 
-  constructor(childs : BaseNode[], id?: number) {
-    super('Priority', id);
+  constructor(childs : BaseNode[]) {
+    super('Priority');
 
     this.childs = [];
     childs.map(c => this.childs.push(c));

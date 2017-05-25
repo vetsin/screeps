@@ -9,8 +9,8 @@ export class FindDroppedResource extends BaseNode {
   /*
   * Get Stored
   */
-  constructor(id?: number) {
-    super('FindStoredEnergy', id);
+  constructor() {
+    super('FindStoredEnergy');
   }
 
   public tick(tick: Tick) : number {

@@ -6,8 +6,8 @@ import b3 from './../../lib/b3/';
 export class FindConstructionSite extends BaseNode {
   target_type: string
 
-  constructor(targetType: string, id?: number) {
-    super('FindConstructionSite', id);
+  constructor(targetType: string) {
+    super('FindConstructionSite');
     this.target_type = targetType || STRUCTURE_STORAGE;
   }
 

@@ -8,8 +8,8 @@ const profiler = require('screeps-profiler');
 export class TransferTarget extends BaseNode {
   name: string;
 
-  constructor(id?: number) {
-    super('TransferTarget', id);
+  constructor() {
+    super('TransferTarget');
   }
 
   public tick(tick: Tick) : number {
@@ -22,7 +22,7 @@ export class TransferTarget extends BaseNode {
     // If we are targeting a spawn or extension, we need to be directly next to it - otherwise, we can be 3 away.
 
     let state = new RoomState(creep.room);
-    if(creep.carry.energy && creep.carry.energy > 0) {
+    if(_.sum(creep.carry) > 0) {
       let transfer_result : number = ERR_INVALID_TARGET;
       if(target instanceof Structure && target.structureType == STRUCTURE_CONTROLLER) {
         transfer_result = creep.upgradeController(<StructureController>target);
@@ -32,14 +32,13 @@ export class TransferTarget extends BaseNode {
       if(transfer_result == ERR_NOT_IN_RANGE) {
         creep.moveTo(target);
       } else if(transfer_result == ERR_FULL) {
-        global.log.debug('Target FULL')
-        state.unmark_energy(creep.memory.target, creep.carryCapacity - creep.carry.energy); // dangerous assumption
+        //state.unmark_energy(creep.memory.target, creep.carryCapacity - creep.carry.energy); // dangerous assumption
         delete creep.memory.target;
         return b3.State.SUCCESS;
       }
       return b3.State.RUNNING
     }
-    state.unmark_energy(creep.memory.target, creep.carryCapacity - creep.carry.energy); // dangerous assumption
+    //state.unmark_energy(creep.memory.target, creep.carryCapacity - creep.carry.energy); // dangerous assumption
     delete creep.memory.target;
     return b3.State.SUCCESS;
   }

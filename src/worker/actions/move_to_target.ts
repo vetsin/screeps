@@ -5,8 +5,8 @@ import b3 from './../../lib/b3/';
 
 export class MoveToTarget extends BaseNode {
 
-  constructor(id?: number) {
-    super('MoveToTarget', id);
+  constructor() {
+    super('MoveToTarget');
   }
 
   public tick(tick: Tick) : number {

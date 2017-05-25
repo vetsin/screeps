@@ -5,7 +5,6 @@
 import {createUUID} from './utils';
 import BaseNode from './basenode';
 import Blackboard from './blackboard';
-import NodeGetter from './node_getter';
 import Tick from './tick';
 
 /**
@@ -91,7 +90,7 @@ export default class BehavoirTree {
   private find_node(id: string, node? : BaseNode) : BaseNode | undefined {
     // walk tree :(
     var mynode = node || this.root;
-    if(mynode.name == id)
+    if(mynode.id == id)
       return mynode;
     if((mynode as any).childs != undefined) {
       let chillen = (mynode as any).childs as BaseNode[]
@@ -103,4 +102,5 @@ export default class BehavoirTree {
     }
     return undefined;
   }
+
 }

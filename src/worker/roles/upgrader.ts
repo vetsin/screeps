@@ -2,7 +2,9 @@
 import {Worker} from './../Worker';
 import {Hive} from './../../Hive';
 import b3 from './../../lib/b3/';
+
 import * as Actions from './../actions';
+import * as Utils from './../../components/utils';
 
 const profiler = require('screeps-profiler');
 
@@ -26,12 +28,12 @@ export class Upgrader extends Worker {
     }
 
     public create(hive: Hive) : protoCreep | undefined {
-      let upgraders = hive.get_workers(this.role);
-      if(upgraders.length == 0) {
+      let upgrader_count = Utils.get_role_count(hive.room, this.role);
+      if(upgrader_count == 0) {
         return this.get_proto(300);
       } else {
-        // for now just have 1 upgraders, allow builders to fill the role otherwise
-        if(upgraders.length < 2)
+        // for now just have n upgraders, allow builders to fill the role otherwise
+        if(upgrader_count < 2)
           return this.get_proto(300);
       }
     }
@@ -39,10 +41,10 @@ export class Upgrader extends Worker {
     setup() : any {
       return new b3.composite.Priority([
         new b3.composite.MemSequence([
-          new Actions.FindTarget(STRUCTURE_CONTROLLER, 1),
-          new Actions.MoveToTarget(1),
-          new Actions.TransferTarget(1)
-        ],1)
-      ],0)
+          new Actions.FindTarget(STRUCTURE_CONTROLLER),
+          new Actions.MoveToTarget(),
+          new Actions.TransferTarget()
+        ])
+      ])
     }
 }

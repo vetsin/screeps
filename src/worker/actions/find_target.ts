@@ -8,13 +8,13 @@ export class FindTarget extends BaseNode {
   name: string;
   target_type: string
 
-  constructor(targetType: string, id?: number) {
-    super('FindTarget', id);
+  constructor(targetType: string) {
+    super('FindTarget');
     this.target_type = targetType || STRUCTURE_SPAWN;
   }
 
   public tick(tick: Tick) : number {
-    console.log('FindTarget.tick ', this.target_type)
+    //console.log('FindTarget.tick ', this.target_type)
     var creep = <Creep>tick.target;
     // just get the closest
     let target = creep.pos.findClosestByRange<Structure>(FIND_STRUCTURES, {

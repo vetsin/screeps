@@ -13,12 +13,12 @@ export default class Wait extends BaseNode {
 
   public open(tick: Tick) : void {
     var startTime = (new Date()).getTime();
-    tick.blackboard.set('startTime', startTime, tick.tree.id, this.generate_id());
+    tick.blackboard.set('startTime', startTime, tick.tree.id, this.id);
   }
 
   public tick(tick: Tick) : number {
     var currTime = (new Date()).getTime();
-    var startTime = tick.blackboard.get('startTime', tick.tree.id, this.generate_id());
+    var startTime = tick.blackboard.get('startTime', tick.tree.id, this.id);
 
     if (currTime - startTime >= this.endTime) {
       return State.SUCCESS;

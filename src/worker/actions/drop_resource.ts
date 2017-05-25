@@ -6,8 +6,8 @@ export class DropResource extends BaseNode {
   name: string;
   resource: string;
 
-  constructor(resource: string, id?: number) {
-    super('DropResource', id);
+  constructor(resource: string) {
+    super('DropResource');
     this.resource = resource || RESOURCE_ENERGY;
   }
 

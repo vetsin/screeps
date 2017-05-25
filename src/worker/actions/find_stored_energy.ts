@@ -9,8 +9,8 @@ export class FindStoredEnergy extends BaseNode {
   /*
   * Get Stored
   */
-  constructor(id?: number) {
-    super('FindStoredEnergy', id);
+  constructor() {
+    super('FindStoredEnergy');
   }
 
   public tick(tick: Tick) : number {
@@ -27,7 +27,6 @@ export class FindStoredEnergy extends BaseNode {
       return b3.State.FAILURE;
 
     let state = new RoomState(creep.room);
-
     if(creep.carry.energy < creep.carryCapacity) {
       let actual_capacity = creep.carryCapacity - creep.carry.energy;
       let container = creep.pos.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
@@ -41,8 +40,11 @@ export class FindStoredEnergy extends BaseNode {
           return false;
         }
       });
-      if(container) {
-        let earmark_energy_count = container.store[RESOURCE_ENERGY] > actual_capacity ? actual_capacity : container.store[RESOURCE_ENERGY];
+      if(!container)
+        return b3.State.FAILURE;
+      let earmarked = state.get_earmarked_energy(container.id);
+      if(container.store.energy > earmarked) {
+        let earmark_energy_count = container.store.energy > actual_capacity ? actual_capacity : container.store.energy;
         state.earmark_energy(container.id, earmark_energy_count)
         creep.memory.target = container.id;
         return b3.State.SUCCESS

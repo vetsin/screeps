@@ -17,14 +17,31 @@ export class RoomState {
   }
 
   // Conductor Energy
-  public earmark_energy(target_id: string, energy: number) : number {
+  public earmark_energy(target_id: string, energy: number | undefined) : number {
+    energy = energy || 0
     if(!this.room.memory.conductor[target_id]) {
       this.room.memory.conductor[target_id] = energy;
     } else {
       this.room.memory.conductor[target_id] += energy;
     }
-    console.log('earmark_energy', target_id, this.room.memory.conductor[target_id]-energy,'+=',energy)
+    this.debug_earmark(target_id, energy, 'Earmarked');
     return this.get_earmarked_energy(target_id);
+  }
+
+  private debug_earmark(target_id: string, energy: number, action: string) {
+    // DEBUGGING
+    let currently_marked = this.get_earmarked_energy(target_id);
+    let obj = Game.getObjectById(target_id)
+    var target_energy = 0;
+    if(obj instanceof StructureContainer) {
+      target_energy = (obj as StructureContainer).store.energy
+    } else if (obj instanceof Resource) {
+      target_energy = (obj as Resource).amount;
+    }
+    let percent = currently_marked / target_energy;
+    let fill_count = percent > 1 ? 5 : Math.floor(5 * percent);
+    let empty_count = 5 - fill_count;
+    global.log.debug(`${action} [${'|'.repeat(fill_count)}${'_'.repeat(empty_count)}] (${energy})(${currently_marked}/${target_energy} - ${percent*100}%) claimed`);
   }
 
   public get_earmarked_energy(target_id: string) : number {
@@ -33,9 +50,8 @@ export class RoomState {
     return 0;
   }
 
-  public unmark_energy(target_id: string, energy: number) : number {
-
-    console.log('unmark_energy', target_id, this.room.memory.conductor[target_id],'-=',energy)
+  public unmark_energy(target_id: string, energy: number | undefined) : number {
+    energy = energy || 0;
     if(this.room.memory.conductor[target_id]) {
       this.room.memory.conductor[target_id] -= energy;
 
@@ -43,6 +59,7 @@ export class RoomState {
         delete this.room.memory.conductor[target_id];
       }
     }
+    this.debug_earmark(target_id, energy, 'Unmarked');
     return this.get_earmarked_energy(target_id);
   }
 

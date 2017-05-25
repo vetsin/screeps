@@ -6,8 +6,8 @@ import {RoomState} from './../../components/state';
 export class WithdrawTarget extends BaseNode {
   resourceType: string;
 
-  constructor(resourceType : string, id?: number) {
-    super('WithdrawTarget', id);
+  constructor(resourceType : string) {
+    super('WithdrawTarget');
     this.resourceType = resourceType || RESOURCE_ENERGY;
   }
 

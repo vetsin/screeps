@@ -1,36 +1,44 @@
 import b3 from '../lib/b3/index';
+import BaseNode from './../lib/b3/basenode';
 import {Hive} from './../Hive';
-const profiler = require('screeps-profiler');
-
-//import {createUUID} from '../lib/b3/utils';
-//import * as Actions from './actions';
-//import * as Roles from './roles';
+//const profiler = require('screeps-profiler');
+import * as Conditions from './conditions';
 
 export abstract class Worker {
   name: string;
   role: string;
-  //creep: Creep;
-  tree: any;
-  blackboard: any;
-  tree_id: string;
   currentUUID: number;
 
   constructor(creepName: string, role: string) {
     this.name = creepName;
     this.role = role;
     this.currentUUID = 0;
+  }
 
-    if(creepName != '') {
-      //console.log('gonna create a new tree..')
-      this.tree_id = Game.creeps[creepName].memory.tree + '_' + this.name;
-      //console.log('treeid ' + this.tree_id);
-      this.tree = new b3.BehaviorTree(this.tree_id, this.setup());
-      this.blackboard = new b3.Blackboard();
+  public construct_tree() : any {
+    let worker_root = new b3.composite.MemSequence([
+      new Conditions.CheckRole(this.role),
+      this.setup()
+    ]);
+    this._set_ids(worker_root);
+    return worker_root;
+  }
+
+  private _set_ids(node: BaseNode) : void {
+    // Set all ID's in a deterministic manner unique to this worker
+    node.set_id(this.createUUID());
+    if((node as any).childs != undefined) {
+      let chillen = (node as any).childs as BaseNode[]
+      for(let mn of chillen) {
+        this._set_ids(mn);
+      }
     }
   }
 
-  protected createUUID() : number {
-    return this.currentUUID++;
+  protected createUUID() : string {
+    //let newid = this.currentUUID++;
+    //return this.name + newid;
+    return `${this.name}_${this.currentUUID++}`;
   }
 
   abstract setup() : any;
@@ -49,12 +57,6 @@ export abstract class Worker {
 
   }
 
-  public tick(): void {
-    //this.tree.id = this.tree.id + this.name;
-    this.tree.tick(Game.creeps[this.name], this.blackboard);
-  }
-
-
 }
 
-profiler.registerClass(Worker, 'Worker');
+//profiler.registerClass(Worker, 'Worker');

@@ -14,18 +14,25 @@ export class WithdrawTarget extends BaseNode {
   public tick(tick: Tick) : number {
     var creep = <Creep>tick.target;
     let target = Game.getObjectById<Structure>(creep.memory.target);
-    if(!target)
+    if(!target) {
       return b3.State.FAILURE;
+    }
 
     let state = new RoomState(creep.room);
-    if(creep.carry.energy && creep.carry.energy < creep.carryCapacity) {
-      console.log('withdrawing from ', target.id)
-      if(creep.withdraw(target, this.resourceType) == ERR_NOT_IN_RANGE) {
+    if(_.sum(creep.carry) < creep.carryCapacity) {
+      let res = creep.withdraw(target, this.resourceType);
+      if(res == ERR_NOT_IN_RANGE) {
         creep.moveTo(target);
+      } else if (res == ERR_NOT_ENOUGH_RESOURCES) {
+        // if we have ANY energy consider it a SUCCESS
+        if(_.sum(creep.carry) > 0) {
+          return b3.State.SUCCESS;
+        }
+        return b3.State.FAILURE;
       }
       return b3.State.RUNNING;
     }
-    state.unmark_energy(target.id, creep.carry.energy);
+    //state.unmark_energy(target.id, creep.carry.energy);
     delete creep.memory.target;
     return b3.State.SUCCESS;
   }

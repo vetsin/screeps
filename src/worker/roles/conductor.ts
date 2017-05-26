@@ -81,7 +81,6 @@ export class Conductor extends Worker {
         // Assume we have nothing to do, and go to spawn
         new b3.composite.MemSequence([
           new Actions.FindFlag('Hangout'),
-          new Actions.MoveToTarget()
         ]),
       ])
     }

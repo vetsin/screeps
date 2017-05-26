@@ -31,7 +31,7 @@ export class Builder extends Worker {
     if(upgrader_count == 0) {
       return this.get_proto(300);
     } else {
-      if(upgrader_count < 3)
+      if(upgrader_count < 2)
         return this.get_proto(300);
     }
   }

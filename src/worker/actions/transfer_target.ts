@@ -25,7 +25,7 @@ export class TransferTarget extends BaseNode {
     if(_.sum(creep.carry) > 0) {
       let transfer_result : number = ERR_INVALID_TARGET;
       if(target instanceof Structure && target.structureType == STRUCTURE_CONTROLLER) {
-        transfer_result = creep.upgradeController(<StructureController>target);
+        transfer_result = creep.upgradeController(target as StructureController);
       } else {
         transfer_result = creep.transfer(target, RESOURCE_ENERGY);
       }

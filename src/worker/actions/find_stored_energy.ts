@@ -23,34 +23,32 @@ export class FindStoredEnergy extends BaseNode {
           return b3.State.SUCCESS;
       }
     }
-    if(creep.carry.energy == undefined)
-      return b3.State.FAILURE;
 
     let state = new RoomState(creep.room);
-    if(creep.carry.energy < creep.carryCapacity) {
-      let actual_capacity = creep.carryCapacity - creep.carry.energy;
-      let container = creep.pos.findClosestByRange<StructureContainer>(FIND_STRUCTURES, {
+    if(_.sum(creep.carry) < creep.carryCapacity) {
+      let actual_capacity = creep.carryCapacity - _.sum(creep.carry);
+      let container = creep.room.find<StructureContainer>(FIND_STRUCTURES, {
         filter: (s : Structure) =>{
           if (s.structureType == STRUCTURE_CONTAINER ) {
             let sc = s as StructureContainer;
-            console.log(sc.store[RESOURCE_ENERGY], ' ', state.get_earmarked_energy(s.id), ' ', sc.store[RESOURCE_ENERGY])
-            return sc.store[RESOURCE_ENERGY] > 0 &&
-                    state.get_earmarked_energy(s.id) < sc.store[RESOURCE_ENERGY];
+            //console.log(sc.store[RESOURCE_ENERGY], ' ', state.get_earmarked_energy(s.id), ' ', sc.store[RESOURCE_ENERGY])
+            return sc.store[RESOURCE_ENERGY] > 0;// &&
+                    //state.get_earmarked_energy(s.id) < sc.store[RESOURCE_ENERGY];
           }
           return false;
         }
       });
-      if(!container)
+      if(container.length == 0)
         return b3.State.FAILURE;
-      let earmarked = state.get_earmarked_energy(container.id);
-      if(container.store.energy > earmarked) {
-        let earmark_energy_count = container.store.energy > actual_capacity ? actual_capacity : container.store.energy;
-        state.earmark_energy(container.id, earmark_energy_count)
-        creep.memory.target = container.id;
+      //let earmarked = state.get_earmarked_energy(container.id);
+      //if(container.store.energy > earmarked) {
+        //let earmark_energy_count = container.store.energy > actual_capacity ? actual_capacity : container.store.energy;
+        //state.earmark_energy(container.id, earmark_energy_count)
+        creep.memory.target = _.sample(container).id;
         return b3.State.SUCCESS
-      }
+      //}
       // we failed...
-      return b3.State.FAILURE;
+      //return b3.State.FAILURE;
     }
     return b3.State.FAILURE;
   }

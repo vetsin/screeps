@@ -11,16 +11,19 @@ export class FindFlag extends BaseNode {
   }
 
   public tick(tick: Tick) : number {
-    //console.log('FindTarget.tick ', this.target_type)
+    console.log('FindFlag.tick ', this.flag_name)
     var creep = <Creep>tick.target;
     // just get the closest
     let target = creep.room.find<Flag>(FIND_FLAGS, {
-      filter: (s:Flag) => { return s.name == this.flag_name }
+      filter: (f:Flag) => { return f.name == this.flag_name }
     });
-    if(!target)
+    if(target.length == 0)
       return b3.State.FAILURE;
-    creep.memory.target = target[0].pos;
-
+    console.log('found flag')
+    if(!creep.pos.isNearTo(target[0].pos)) {
+      creep.moveTo(target[0].pos);
+      return b3.State.RUNNING;
+    }
     return b3.State.SUCCESS;
   }
 }

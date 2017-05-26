@@ -18,7 +18,7 @@ export class CheckTargetEnergy extends BaseNode {
           let tgt = target as StructureSpawn;
           if(tgt.energy < tgt.energyCapacity)
             return b3.State.SUCCESS;
-        }
+        } 
       }
     }
     return b3.State.FAILURE;

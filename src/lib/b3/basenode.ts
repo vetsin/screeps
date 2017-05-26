@@ -8,7 +8,7 @@ export default abstract class BaseNode {
 
   constructor(name: string) {
     this.id = name;
-    this.debug_creep_name = 'conductor_5';
+    //this.debug_creep_name = 'conductor_5';
   }
 
   public set_id(id: string) : string {

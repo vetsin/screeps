@@ -59,6 +59,7 @@ export class Harvester extends Worker {
             // either deposit it
             new b3.composite.MemSequence([
               new Actions.FindTarget(STRUCTURE_CONTAINER),
+              new Conditions.TargetIsWithin(3),
               new Actions.RepairTarget(),
               new Actions.TransferTarget()
             ]),

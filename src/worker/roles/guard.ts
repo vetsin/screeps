@@ -10,8 +10,19 @@ export class Guard extends Worker {
     /*
     * Move energy around
     */
-    constructor(creepName: string) {
-      super(creepName, 'guard');
+    constructor() {
+      super('guard');
+    }
+
+    public shouldSpawn(room: Room): boolean {
+      const guardCount = Utils.get_role_count(room, this.role);
+      if (guardCount < 2) {
+        return true;
+      }
+      return false;
+    }
+    public defineCreep(room: Room): protoCreep {
+      return this.get_proto(300);
     }
 
     private get_proto(energy: number) : protoCreep {

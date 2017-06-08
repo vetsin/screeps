@@ -8,10 +8,10 @@ export class HasEnergy extends BaseNode {
     super('HasEnergy');
   }
 
-  public tick(tick: Tick) : number {
-    var creep = <Creep>tick.target;
-    if(_.sum(creep.carry) >= 0) {
-      return b3.State.SUCCESS
+  public tick(tick: Tick): number {
+    const creep = tick.target as Creep;
+    if (_.sum(creep.carry) >= 0) {
+      return b3.State.SUCCESS;
     }
     return b3.State.FAILURE;
   }

@@ -8,18 +8,22 @@ export class BuildTarget extends BaseNode {
     super('BuildTarget');
   }
 
-  public tick(tick: Tick) : number {
-    var creep = <Creep>tick.target;
-    let target = Game.getObjectById<ConstructionSite>(creep.memory.target);
-    if(!target)
+  public tick(tick: Tick): number {
+    const creep = tick.target as Creep;
+    const target = Game.getObjectById<ConstructionSite>(creep.memory.target);
+    if (!target) {
       return b3.State.FAILURE;
-
-    if(creep.carry.energy && creep.carry.energy > 0) {
-      if(creep.build(target) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(target);
-      }
-      return b3.State.RUNNING;
     }
+
+    if (creep.carry.energy && creep.carry.energy > 0) {
+      const res = creep.build(target);
+      if (res === ERR_NOT_IN_RANGE) {
+        creep.moveTo(target);
+      } else if (res === OK) {
+        return b3.State.RUNNING;
+      }
+    }
+
     return b3.State.SUCCESS;
   }
 }

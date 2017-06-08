@@ -1,50 +1,28 @@
 import {Hive} from "../Hive";
+import b3 from './../lib/b3/index';
+import BaseNode from './../lib/b3/basenode';
+import Tick from './../lib/b3/tick';
+import * as Actions from './../worker/actions';
+import * as Conditions from './../worker/conditions';
+import * as HatcheryNodes from "./../worker/hatchery";
+import * as Roles from "./../worker/roles";
 
 export class Hatchery {
-  availableSpawns: 0;
-  hive: Hive;
-  spawns: Spawn[];
-  //queue: protoCreep[];
 
-  constructor(hive: Hive) {
-    this.hive = hive;
-    this.spawns = this.hive.room.find<Spawn>(FIND_MY_SPAWNS);
-  }
+  public construct(): BaseNode {
+    const builderSequences = [];
 
-  private getSpawnsAvailable(): Spawn[] {
-    return _.filter(this.spawns, (spawn: Spawn) => { return !spawn.spawning });
-  }
-
-  public spawnAvailable(): boolean {
-    return this.getSpawnsAvailable().length > 0;
-  }
-
-  public getBestSpawn() : Spawn {
-    //TODO: actually return the best spawn
-    return _.filter(this.spawns, (spawn: Spawn) => { return !spawn.spawning })[0];
-  }
-
-  public canSpawn(cost: number) : boolean {
-    let spawns = this.getSpawnsAvailable();
-    for(let spawn of spawns) {
-      if(spawn.energy >= cost)
-        return true;
+    const priorityOrder = ['harvester', 'conductor', 'builder', 'upgrader'];
+    for (const role of priorityOrder) {
+      builderSequences.push(new b3.composite.MemSequence([
+        new HatcheryNodes.ShouldSpawn(role),
+        new HatcheryNodes.SpawnCreep(role)
+      ]));
     }
-    return false;
-  }
-
-  public spawnCreep(pc: protoCreep): number | string {
-    //console.log('spawncreep')
-    let spawn: Spawn = _.sample(this.getSpawnsAvailable());
-    //console.log(pc.body);
-    //console.log(pc.name);
-    //console.log(pc.memory);
-    if(spawn)
-      return spawn.createCreep(pc.body, pc.name, pc.memory);
-    else
-      console.log('no spawn to spawn')
-    //  return spawn.createCreep(pc.body, pc.name, pc.memory);
-    return -1;
+    return new b3.composite.MemSequence([
+      new HatcheryNodes.ChooseSpawn(),
+      new b3.composite.MemPriority(builderSequences)
+    ]);
   }
 
 }

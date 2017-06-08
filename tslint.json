@@ -4,8 +4,11 @@
   ],
   "rules": {
     "forin": false,
+    "object-literal-sort-keys": false,
     "interface-name": [false],
     "no-console": [false],
+    "quotemark": [true, "single"],
+    "ordered-imports": false,
     "trailing-comma": [
       true,
       "never"

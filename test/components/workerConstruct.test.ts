@@ -1,6 +1,6 @@
 import {assert} from "chai";
 import {CreepFactory} from "../mock/factory.creep";
-import map_role from "../../src/worker/Mapper";
+//import map_role from "../../src/worker/Mapper";
 
 describe("worker construct", () => {
 
@@ -20,8 +20,8 @@ describe("worker construct", () => {
 
   it("can construct role", () => {
     const creep = creepFactory.build();
-    let role = map_role(creep.name);
-    assert.isNotNull(role);
+    //let role = map_role(creep.name);
+    assert.isNotNull(null);
   });
 
 });

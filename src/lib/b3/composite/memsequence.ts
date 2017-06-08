@@ -13,6 +13,16 @@ export default class MemSequence extends BaseNode implements IComposite {
     childs.map(c => this.childs.push(c));
   }
 
+  public enter(tick: Tick): void {
+    const depth = tick.blackboard.get("depth", tick.tree.id) || 0;
+    tick.blackboard.set("depth", depth + 1, tick.tree.id);
+  }
+
+  public exit(tick: Tick): void {
+    const depth = tick.blackboard.get("depth", tick.tree.id) || 0;
+    tick.blackboard.set("depth", depth - 1, tick.tree.id);
+  }
+
   public open(tick: Tick) : void {
     tick.blackboard.set('runningChild', 0, tick.tree.id, this.id);
   }

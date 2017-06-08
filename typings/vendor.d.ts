@@ -7,6 +7,8 @@ declare namespace NodeJS {
     log: any;
     //b3: any;
     Queen: any;
+    tree: any;
+    blackboard: any;
   }
 }
 

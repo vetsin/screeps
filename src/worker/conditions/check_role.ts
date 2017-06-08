@@ -3,18 +3,18 @@ import Tick from './../../lib/b3/tick';
 import b3 from './../../lib/b3/';
 
 export class CheckRole extends BaseNode {
-  role: string;
+  private role: string;
 
   constructor(role: string) {
-    super('CheckRole');
-    this.role = role;
+    super("CheckRole");
+    this.role = role.toLowerCase();
   }
 
-  public tick(tick: Tick) : number {
-    var creep = <Creep>tick.target;
-    //console.log(creep.memory.role, this.role, creep.memory.role == this.role)
-    if(creep.memory.role == this.role)
-      return b3.State.SUCCESS
+  public tick(tick: Tick): number {
+    const creep = tick.target as Creep;
+    if (creep && !creep.spawning && creep.memory.role === this.role) {
+      return b3.State.SUCCESS;
+    }
     return b3.State.FAILURE;
   }
 }

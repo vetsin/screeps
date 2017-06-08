@@ -1,5 +1,5 @@
 
-import State from './../constants/state';
+import State from '../constants/state';
 import BaseNode from './../basenode';
 
 export default class Priority extends BaseNode {
@@ -10,7 +10,7 @@ export default class Priority extends BaseNode {
     this.child = child;
 
     if (!child) {
-      console.warn('[behavior3] a decorator was initialized without child (', 
+      console.warn('[behavior3] a decorator was initialized without child (',
         this.id, ')');
     }
   }

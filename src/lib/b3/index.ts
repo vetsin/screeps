@@ -13,12 +13,14 @@ import Sequence from './composite/sequence';
 import MemSequence from './composite/memsequence';
 import Priority from './composite/priority';
 import MemPriority from './composite/mempriority';
+import SuccessLoop from './composite/successloop';
 
 //import Action from './core/action';
 //import Composite from './core/composite';
 //import Conditon from './core/condition';
 
 import Inverter from './decorator/inverter';
+import Continue from './decorator/continue';
 
 import Wait from './action/wait';
 
@@ -64,10 +66,12 @@ export default {
     Sequence,
     MemSequence,
     Priority,
-    MemPriority
+    MemPriority,
+    SuccessLoop
   },
   decorator: {
-    Inverter
+    Inverter,
+    Continue
   },
   action: {
     Wait

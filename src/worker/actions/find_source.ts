@@ -5,10 +5,11 @@ import b3 from './../../lib/b3/';
 const profiler = require('screeps-profiler');
 
 export class FindSource extends BaseNode {
-  name: string;
+  private assignSource: boolean;
 
-  constructor() {
+  constructor(assignSource?: boolean) {
     super('FindSource');
+    this.assignSource = assignSource || true;
   }
 
   private remember_source(creep: Creep, source_id: string, data: SourceData) : any {
@@ -139,31 +140,31 @@ export class FindSource extends BaseNode {
   */
   private find_best_source(creep: Creep) : string {
     let total_sources = creep.room.memory.total_sources;
-    if(!total_sources) {
+    if (!total_sources) {
       this.initialize_sources(creep);
     }
-    if(creep.memory.assigned_source) {
+    if (creep.memory.assigned_source) {
       //creep.room.memory.sources[creep.memory.assigned_source].active_miners += 1;
       return creep.memory.assigned_source;
     }
     let sources = creep.room.memory.sources;
     /*
-    let best_id = Object.keys(sources).reduce((a:string, b:string) => {
-      let msa = sources[a];
-      let msb = sources[b];
-      // caluclate range
-      let arange = creep.pos.getRangeTo(msa.x, msa.y);
-      let brange = creep.pos.getRangeTo(msb.x, msb.y);
-      // weighted
-      return (msa.active_miners * arange) < (msb.active_miners * brange) && msb.has_keeper == false ? a : b
-    })
-    */
-    let best_id = Object.keys(sources).reduce((prev:string, curr:string) => {
+     let best_id = Object.keys(sources).reduce((a:string, b:string) => {
+     let msa = sources[a];
+     let msb = sources[b];
+     // caluclate range
+     let arange = creep.pos.getRangeTo(msa.x, msa.y);
+     let brange = creep.pos.getRangeTo(msb.x, msb.y);
+     // weighted
+     return (msa.active_miners * arange) < (msb.active_miners * brange) && msb.has_keeper == false ? a : b
+     })
+     */
+    let best_id = Object.keys(sources).reduce((prev: string, curr: string) => {
       let msa = sources[prev];
       let msb = sources[curr];
-      if(msa.has_keeper)
+      if (msa.has_keeper)
         return curr
-      if(msb.has_keeper)
+      if (msb.has_keeper)
         return prev
       //console.log('prev ', prev, ' ', msa, ' curr ', curr, ' ', msb)
       return msb.active_miners < msa.active_miners && msb.has_keeper == false ? curr : prev;
@@ -172,7 +173,9 @@ export class FindSource extends BaseNode {
     // add to active miners
     creep.room.memory.sources[best_id].active_miners += 1;
     //creep.room.memory.sources[best_id].assigned_miners += 1;
-    creep.memory.assigned_source = best_id;
+    if (this.assignSource) {
+      creep.memory.assigned_source = best_id;
+    }
     return best_id;
   }
 
@@ -180,6 +183,7 @@ export class FindSource extends BaseNode {
     let creep = <Creep>tick.target;
     //var sources = creep.room.find<Source>(FIND_SOURCES);
     //console.log('FindSourc.etick')
+
 
     let source = Game.getObjectById<Source>(this.find_best_source(creep));
     if(source && source.energy > 0) {

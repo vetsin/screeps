@@ -1,47 +1,69 @@
-//import * as CreepManager from "./components/creeps/creepManager";
+import b3 from "./lib/b3/index";
 import * as Config from "./config/config";
-
-import * as Profiler from "screeps-profiler";
+import * as Conditions from "./worker/conditions";
 import { log } from "./lib/logger/log";
+import * as Profiler from "screeps-profiler";
+import * as Roles from "./worker/roles";
+import {Hatchery} from "./components/hatchery";
 
-import Q from "./Queen";
-global.Queen = new Q;
-
-// Any code written outside the `loop()` method is executed only when the
-// Screeps system reloads your script.
-// Use this bootstrap wisely. You can cache some of your stuff to save CPU.
-// You should extend prototypes before the game loop executes here.
-
-// This is an example for using a config variable from `config.ts`.
-// NOTE: this is used as an example, you may have better performance
-// by setting USE_PROFILER through webpack, if you want to permanently
-// remove it on deploy
-// Start the profiler
 if (Config.USE_PROFILER) {
   Profiler.enable();
 }
 
 log.info(`loading revision: ${ __REVISION__ }`);
 
-function mloop() {
-  // Check memory for null or out of bounds custom objects
-  if (!Memory.uuid || Memory.uuid > 100) {
-    Memory.uuid = 0;
+// Generate Behavior Tree
+
+function setupBehaviorTree(): void {
+  global.blackboard = new b3.Blackboard();
+  const roomNodes = [new Conditions.IsRoom(), new Hatchery().construct()];
+
+  const childRoles = [];
+  for (const role in Roles) {
+    const workerClass = (Roles as any)[role];
+    const worker = new workerClass();
+    const tree = worker.construct_tree();
+    childRoles.push(tree);
   }
+  const seq = new b3.composite.MemPriority([
+    // rooms
+    new b3.composite.MemSequence(roomNodes),
+    // nodes
+    new b3.composite.MemSequence([
+      new Conditions.IsCreep(),
+      new b3.composite.MemPriority(childRoles)
+    ])
+  ]);
+  global.tree = new b3.BehaviorTree("root", seq);
+}
+
+// Setup Tree
+if (global.tree === undefined) {
+  setupBehaviorTree();
+}
+
+function mloop() {
   // Clear memory
-  for (let name in Memory.creeps) {
-    if (Game.creeps[name] == undefined) {
+  for (const name in Memory.creeps) {
+    if (Game.creeps[name] === undefined) {
       // then delete
+      global.tree.delete_memory(name, global.blackboard);
       delete Memory.creeps[name];
     }
-
   }
 
-  global.Queen.initialize();
-
-  for(let name in global.Queen.Hives) {
-    global.Queen.Hiveminds[name].run();
+  // Tick Rooms
+  for (const roomName in Game.rooms) {
+    const room = Game.rooms[roomName];
+    global.tree.tick(room, global.blackboard);
   }
+
+  // Tick Creeps
+  for (const creepName in Game.creeps) {
+    const creep = Game.creeps[creepName];
+    global.tree.tick(creep, global.blackboard);
+  }
+
 }
 
 export const loop = !Config.USE_PROFILER ? mloop : Profiler.wrap(mloop);

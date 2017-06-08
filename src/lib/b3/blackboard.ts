@@ -7,7 +7,7 @@
  */
 export default class Blackboard {
   constructor() {
-    if(!Memory.treeMemory) {
+    if (!Memory.treeMemory) {
       Memory.baseMemory = {};
       Memory.treeMemory = {};
     }
@@ -15,7 +15,7 @@ export default class Blackboard {
   /**
    * returns memory Map for given tree
    */
-  getTreeMemory(treeScope : string) {
+  public getTreeMemory(treeScope: string) {
     if (!Memory.treeMemory[treeScope]) {
       Memory.treeMemory[treeScope] = {
         nodeMemory: {},
@@ -25,17 +25,17 @@ export default class Blackboard {
 
     return Memory.treeMemory[treeScope];
   }
-  getNodeMemory(treeMemory : any, nodeScope : string) {
-    var memory = treeMemory.nodeMemory;
+  public getNodeMemory(treeMemory: any, nodeScope: string) {
+    const memory = treeMemory.nodeMemory;
 
     if (!memory[nodeScope]) {
       memory[nodeScope] = {};
     }
 
-    return memory[nodeScope]
+    return memory[nodeScope];
   }
-  getMemory(treeScope : string, nodeScope? : string ) {
-    var memory = Memory.baseMemory;
+  public getMemory(treeScope: string, nodeScope?: string ) {
+    let memory = Memory.baseMemory;
 
     if (treeScope !== undefined) {
       memory = this.getTreeMemory(treeScope);
@@ -47,14 +47,17 @@ export default class Blackboard {
 
     return memory;
   }
-  set(key : string, value : any, treeScope: string, nodeScope? : string ) {
-    var memory = this.getMemory(treeScope, nodeScope);
+  public set(key: string, value: any, treeScope: string, nodeScope?: string ): void {
+    const memory = this.getMemory(treeScope, nodeScope);
 
     memory[key] = value;
   }
-  get(key : string, treeScope : string, nodeScope? : string) {
-    var memory = this.getMemory(treeScope, nodeScope);
+  public get(key: string, treeScope: string, nodeScope?: string): any | undefined {
+    const memory = this.getMemory(treeScope, nodeScope);
 
     return memory[key];
+  }
+  public delete(treeScope: string): any {
+    delete Memory.baseMemory[treeScope];
   }
 }
